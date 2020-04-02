@@ -1,104 +1,112 @@
-function displayPrevious (number){
-    document.querySelector('#disp-item-previous').innerText =  number;
+//DOM
+let numberBtns = document.querySelectorAll('.number'); // selektuje sve brojeve 0 i .
+let mathOpBtns = document.querySelectorAll('.math-op'); // selektuje matematicke operacije
+let allClear = document.querySelector('#all-clear');
+let deleteBtn = document.querySelector('#delete');
+let equalBtn = document.querySelector('#equals');
+let currentOperandDisplay = document.querySelector('#disp-item-current');
+let previouseOperandDisplay = document.querySelector('#disp-item-previous');
+
+//Varijable
+let currentOperand = '';
+let previouseOperand = '';
+let operator = '';
+let floatResult = '';
+
+// Function
+
+let calculate = (current, previouse, operator) => {
+  let currentOperand = Number(current)
+  let previouseOperand = Number (previouse) 
+  switch (operator) {
+    case '+':
+      return currentOperand + previouseOperand;
+    case '-':
+      return previouseOperand - currentOperand;
+    case '*':
+      return currentOperand * previouseOperand;
+    case '/':
+      if (currentOperand === 0) {
+        return 'Not allowed';
+      } else {
+        return previouseOperand / currentOperand;
+      }
+  }
 };
 
-function getPrevious (){
+// Listen
 
-}
+numberBtns.forEach(n => {
+  n.addEventListener('click', () => {
+    if (n.id === '.' && currentOperand.includes('.')) return;
+    currentOperand += n.id;
+    currentOperandDisplay.innerHTML = currentOperand;
+  });
+});
 
-function displayCurrent (number){
-    document.querySelector('#disp-item-current').innerText =  number;
-};
+mathOpBtns.forEach(o => {
+  o.addEventListener('click', () => {
+    if(currentOperand.toString() == '') return
+    if (previouseOperand.toString() === ''){
+      previouseOperand = currentOperand;
+      currentOperand = '';
+      operator = o.id;
+      if (floatResult !== ''){
+        previouseOperandDisplay.innerHTML = floatResult + operator;
+      }
+      else{
+        previouseOperandDisplay.innerHTML = previouseOperand + operator;
+      }
+      currentOperandDisplay.innerHTML = '';
+      floatResult = ''
+    } 
+    // if (previouseOperand.toString() !== '' ){
+    //   operator = o.id
+    //   if( currentOperand.toString() !='' && previouseOperand.toString() != ''){
+    //     let calcResult = calculate(currentOperand, previouseOperand , operator);
 
- 
+    //     //currentOperandDisplay.innerHTML = calcResult
+    //   }
+    //  // currentOperandDisplay.innerHTML = ''
+    //  // console.log (calcResult)
+    //   // currentOperand = '';
+    //   // currentOperandDisplay.innerHTML = ''
 
-
-displayCurrent(')
-displayPrevious('')
- 
-var allClear = function(){};
-
-
-
-
-
-
-
-/*var calculate = function(previous, current){
-    var operationsBtn = prompt('unesi operaciju');
-    if(operationsBtn == '+'){
-        return previous + current;
-    }  else if(operationsBtn == '-'){
-        return previous - current;
-    }  else if(operationsBtn == '*'){
-        return previous * current;
-    }  else if(operationsBtn == '/'){
-        return previous / current;
-    }  else if (operationsBtn == '%'){
-        return (previous * current)/100;
-   
-};
-
-var calculate = function(previous, current){
-    
-    switch (operations){
-        case '+':
-            return previous + current;
-        case '-':
-            return previous - current;
-        case '*':
-            return previous * current;
-        case '/':
-            return previous / current;
-        case '%':
-            return (previous * current)/100;
-        
-
-    }
-}
-
-
-
-console.log (calculate ( 20, 80));
- 
+    // }
 
 
 
 
-var previousRes = document.querySelector('#disp-item-previous');
-var currentRes = document.querySelector('#disp-item-current');*/
-var allClearBth = document.querySelector('#delete');
-var equalsBth = document.querySelector('#equals');
+  
+  });
+});
 
+equalBtn.addEventListener('click', () => {
+  if (currentOperand === '' || previouseOperand === '') return;
+  let calcResult = calculate(currentOperand, previouseOperand , operator);
+  if (calcResult % 1 !== 0) {
+    floatResult = calcResult.toFixed(2);
+    currentOperandDisplay.innerHTML = floatResult
+  } else{
 
+    currentOperandDisplay.innerHTML = calcResult;
+  }
+  currentOperand = calcResult;
 
-var numberBtn = document.querySelectorAll('.number');
-for(var i = 0; i < numberBtn.length; i++){
-    var nc;
-    numberBtn[i].addEventListener('click', function(){
-    
-        
-        
-        var output ;
-        output = output + this.innerText;
-        displayCurrent(output);
+  previouseOperandDisplay.innerHTML = '';
+  opereator = '';
+});
 
-    
-        
-    
-    });   
-}
+allClear.addEventListener('click', () => {
+  currentOperandDisplay.innerHTML = '';
+  previouseOperandDisplay.innerHTML = '';
+  currentOperand = '';
+  previouseOperand = '';
+  operator = '';
+});
 
-
-var operationsBtn = document.querySelectorAll('.math-op');
-
-for(var i = 0; i < operationsBtn.length; i++){
-    operationsBtn[i].addEventListener('click', function(){
-     console.log (this.innerText)
-    });
-} 
-
-document.querySelector('#delete').addEventListener ('click', function(){
-    displayCurrent('');
-    displayPrevious('');
-})
+deleteBtn.addEventListener('click', () => {
+  console.log('ewe');
+  currentOperand = currentOperand.toString().slice(0, -1);
+  currentOperandDisplay.innerHTML = currentOperand;
+});
